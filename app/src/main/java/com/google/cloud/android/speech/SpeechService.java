@@ -370,6 +370,7 @@ public class SpeechService extends Service {
                 Log.e(TAG, "Failed to obtain access token.", e);
             }
             return null;
+
         }
 
         @Override

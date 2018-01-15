@@ -17,6 +17,7 @@ import android.view.inputmethod.InputConnection;
 import android.widget.Toast;
 
 import java.util.Locale;
+import java.util.Random;
 
 public class SampleKeyboard extends InputMethodService implements KeyboardView.OnKeyboardActionListener {
 
@@ -110,7 +111,18 @@ public class SampleKeyboard extends InputMethodService implements KeyboardView.O
                     Log.d(Tags[1], "Keyboard class speech service listener isFinal value: " + isFinal);
                     if (!TextUtils.isEmpty(text) && isFinal) {
                         ic.commitText(text + ". ", 1);
-                        mTTS.speak(text,TextToSpeech.QUEUE_ADD,)
+
+                        /*
+                        *Generate random Utterance ID
+                        */
+                        String id;
+                        Random rn=new Random();
+                        id=new Integer(rn.nextInt(100)).toString();
+
+
+                        mTTS.speak(text,TextToSpeech.QUEUE_ADD,null,id);
+                        mTTS.speak(CONFIRM,TextToSpeech.QUEUE_ADD,null,id);
+
                         Log.d(Tags[1], "Keyboard class speech service listener VoiceRecorder dismiss");
                         mVoiceRecorder.dismiss();
                         SampleKeyboard.this.stopVoiceRecorder();

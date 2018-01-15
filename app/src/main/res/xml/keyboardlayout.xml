@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
+    android:horizontalGap="5px"
+    android:verticalGap="5px"
+    android:keyHeight="60dp">
+    <Row>
+        <Key
+            android:codes="100004"
+            android:keyLabel="Left"
+            android:keyWidth="50%p"
+            android:keyEdgeFlags="left" />
+        <Key
+            android:codes="100003"
+            android:keyLabel="Right"
+            android:keyWidth="50%p"
+            android:keyEdgeFlags="right" />
+    </Row>
+
+    <Row>
+        <Key
+            android:codes="100002"
+            android:keyLabel="      Record      "
+            android:keyWidth="20%p"
+            android:horizontalGap="40%p" />
+    </Row>
+
+    <Row android:rowEdgeFlags="bottom">
+        <Key
+            android:codes="100001"
+            android:keyLabel="Confirm"
+            android:keyWidth="50%p"
+            android:keyEdgeFlags="right" />
+        <Key
+            android:codes="100000"
+            android:keyLabel="Reject"
+            android:keyWidth="50%p"
+            android:keyEdgeFlags="left" />
+    </Row>
+</Keyboard>

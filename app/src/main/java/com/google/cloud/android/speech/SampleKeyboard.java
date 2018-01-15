@@ -138,6 +138,8 @@ public class SampleKeyboard extends InputMethodService implements KeyboardView.O
     * Assign keyboard view
     * Set Keyboard Layout
     * SetOnKeyListener
+    * Bind speechservice
+    * Initialize TTS
     */
     @Override
     public View onCreateInputView() {
@@ -150,6 +152,8 @@ public class SampleKeyboard extends InputMethodService implements KeyboardView.O
 
         bindService(new Intent(this, SpeechService.class), mServiceConnection, BIND_AUTO_CREATE);
         Log.d(Tags[1], "Keyboard class createInputView");
+
+        //TODO initialize TTS
         return kv;
     }
 
@@ -165,7 +169,7 @@ public class SampleKeyboard extends InputMethodService implements KeyboardView.O
 
     /*
     * Handle Keyboard input
-    * */
+    */
     @Override
     public void onKey(int i, int[] ints) {
         InputConnection ic = getCurrentInputConnection();

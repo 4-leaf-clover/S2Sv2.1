@@ -15,7 +15,7 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.google.cloud.android.speech">
+    package="com.fourleafclover.stos">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -42,7 +42,15 @@
                 <action android:name="android.view.InputMethod" />
             </intent-filter>
         </service>
-        <service android:name=".SpeechService" />
+        <service android:name="com.google.cloud.android.speech.SpeechService" />
+
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

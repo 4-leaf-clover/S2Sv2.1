@@ -70,7 +70,7 @@ import io.grpc.StatusException;
 import io.grpc.internal.DnsNameResolverProvider;
 import io.grpc.okhttp.OkHttpChannelProvider;
 import io.grpc.stub.StreamObserver;
-
+import com.fourleafclover.stos.R;
 
 public class SpeechService extends Service {
 
@@ -292,30 +292,6 @@ public class SpeechService extends Service {
         }
         mRequestObserver.onCompleted();
         mRequestObserver = null;
-    }
-
-    /**
-     * Recognize all data from the specified {@link InputStream}.
-     *
-     * @param stream The audio data.
-     */
-    public void recognizeInputStream(InputStream stream) {
-        try {
-            mApi.recognize(
-                    RecognizeRequest.newBuilder()
-                            .setConfig(RecognitionConfig.newBuilder()
-                                    .setEncoding(RecognitionConfig.AudioEncoding.LINEAR16)
-                                    .setLanguageCode("en-US")
-                                    .setSampleRateHertz(16000)
-                                    .build())
-                            .setAudio(RecognitionAudio.newBuilder()
-                                    .setContent(ByteString.readFrom(stream))
-                                    .build())
-                            .build(),
-                    mFileResponseObserver);
-        } catch (IOException e) {
-            Log.e(TAG, "Error loading the input", e);
-        }
     }
 
     private class SpeechBinder extends Binder {

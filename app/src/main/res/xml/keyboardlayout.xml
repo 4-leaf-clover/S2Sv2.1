@@ -6,20 +6,20 @@
     <Row>
         <Key
             android:codes="100004"
-            android:keyLabel="Left"
-            android:keyWidth="50%p"
+            android:keyLabel="@string/LeftKey"
+            android:keyWidth="48%p"
             android:keyEdgeFlags="left" />
         <Key
             android:codes="100003"
-            android:keyLabel="Right"
-            android:keyWidth="50%p"
+            android:keyLabel="@string/RightKey"
+            android:keyWidth="48%p"
             android:keyEdgeFlags="right" />
     </Row>
 
     <Row>
         <Key
             android:codes="100002"
-            android:keyLabel="      Record      "
+            android:keyLabel="@string/RecordKey"
             android:keyWidth="20%p"
             android:horizontalGap="40%p" />
     </Row>
@@ -27,12 +27,12 @@
     <Row android:rowEdgeFlags="bottom">
         <Key
             android:codes="100001"
-            android:keyLabel="Confirm"
+            android:keyLabel="@string/ConfirmKey"
             android:keyWidth="50%p"
             android:keyEdgeFlags="right" />
         <Key
             android:codes="100000"
-            android:keyLabel="Reject"
+            android:keyLabel="@string/RejectKey"
             android:keyWidth="50%p"
             android:keyEdgeFlags="left" />
     </Row>

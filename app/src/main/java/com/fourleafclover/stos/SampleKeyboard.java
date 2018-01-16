@@ -1,6 +1,7 @@
-package com.google.cloud.android.speech;
+package com.fourleafclover.stos;
 
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -8,13 +9,19 @@ import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.media.AudioManager;
+import android.os.Handler;
 import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputConnection;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.cloud.android.speech.SpeechService;
+import com.google.cloud.android.speech.VoiceRecorder;
+import org.w3c.dom.Text;
 
 import java.util.Locale;
 import java.util.Random;
@@ -40,6 +47,9 @@ public class SampleKeyboard extends InputMethodService implements KeyboardView.O
     private final int KEYBOARD_RECORD = 100002;
     private final int KEYBOARD_CONFIRM = 100001;
     private final int KEYBOARD_REJECT = 100000;
+    private TextView preview;
+    private InputConnection ic;
+    private View root;
 
 
     /*
@@ -52,7 +62,6 @@ public class SampleKeyboard extends InputMethodService implements KeyboardView.O
     /*
     * Text to Speech Variables
     */
-    private final String CONFIRM = "Do you confirm the text output?";
     private TextToSpeech mTTS;
     private final int DATA_CHECK_CODE = 0;
 
@@ -107,25 +116,25 @@ public class SampleKeyboard extends InputMethodService implements KeyboardView.O
             new SpeechService.Listener() {
                 @Override
                 public void onSpeechRecognized(final String text, final boolean isFinal) {
-                    InputConnection ic = getCurrentInputConnection();
                     Log.d(Tags[1], "Keyboard class speech service listener isFinal value: " + isFinal);
                     if (!TextUtils.isEmpty(text) && isFinal) {
-                        ic.commitText(text + ". ", 1);
 
+                        Log.d(Tags[1],"Preview has been updated");
                         /*
                         *Generate random Utterance ID
                         */
                         String id;
                         Random rn=new Random();
-                        id=new Integer(rn.nextInt(100)).toString();
-
-
-                        mTTS.speak(text,TextToSpeech.QUEUE_ADD,null,id);
-                        mTTS.speak(CONFIRM,TextToSpeech.QUEUE_ADD,null,id);
+                        id= Integer.valueOf(rn.nextInt(100)).toString();
 
                         Log.d(Tags[1], "Keyboard class speech service listener VoiceRecorder dismiss");
                         mVoiceRecorder.dismiss();
                         SampleKeyboard.this.stopVoiceRecorder();
+
+                        mTTS.speak(text,TextToSpeech.QUEUE_ADD,null,id);
+
+                        Log.d(Tags[0],"Buffer: "+text);
+                        setPreview(text);
                     }
                 }
             };
@@ -158,15 +167,23 @@ public class SampleKeyboard extends InputMethodService implements KeyboardView.O
     */
     @Override
     public View onCreateInputView() {
-        kv = (KeyboardView) getLayoutInflater().inflate(R.layout.keyboard, null);
+        root=getLayoutInflater().inflate(R.layout.keyboard,null);
+
+        preview=(TextView)root.findViewById(R.id.textPreview);
+        preview.setText("");
+
+        ic = getCurrentInputConnection();
+
         keyboard = new Keyboard(this, R.xml.keyboardlayout);
+
+        kv = (KeyboardView) root.findViewById(R.id.keyboard);
         kv.setKeyboard(keyboard);
         kv.setOnKeyboardActionListener(this);
 
         Log.d(Tags[0], "Keyboard successfully created");
 
         bindService(new Intent(this, SpeechService.class), mServiceConnection, BIND_AUTO_CREATE);
-        Log.d(Tags[1], "Keyboard class createInputView");
+        Log.d(Tags[1], "STT binded successfully");
 
         //TODO initialize TTS
         mTTS=new TextToSpeech(this, new TextToSpeech.OnInitListener() {
@@ -176,10 +193,11 @@ public class SampleKeyboard extends InputMethodService implements KeyboardView.O
                 {
                     mTTS.setLanguage(Locale.ENGLISH);
                     mTTS.setPitch(1.0f);
+                    mTTS.setSpeechRate(0.5f);
                 }
             }
         });
-        return kv;
+        return root;
     }
 
     @Override
@@ -197,7 +215,6 @@ public class SampleKeyboard extends InputMethodService implements KeyboardView.O
     */
     @Override
     public void onKey(int i, int[] ints) {
-        InputConnection ic = getCurrentInputConnection();
         playClick(i);
         switch (i) {
             case KEYBOARD_RECORD:
@@ -214,11 +231,16 @@ public class SampleKeyboard extends InputMethodService implements KeyboardView.O
                 break;
             case KEYBOARD_CONFIRM:
                 Toast.makeText(this, "Confirm Text", Toast.LENGTH_SHORT).show();
-                //TODO add logic for confirming text
+                if(!TextUtils.isEmpty(buffer)) {
+                    Log.d(Tags[0],"Text has been confirmed and committed");
+                    ic.commitText(buffer, 1);
+                    preview.setText("");
+                }
                 break;
             case KEYBOARD_REJECT:
                 Toast.makeText(this, "Reject Text", Toast.LENGTH_SHORT).show();
-                //TODO add logic for rejecting text
+                //TODO Reject button logic is incomplete
+                setPreview("");
                 break;
             default:
                 Log.d(Tags[0], "Invalid keycode");
@@ -227,7 +249,20 @@ public class SampleKeyboard extends InputMethodService implements KeyboardView.O
 
     private void playClick(int i) {
         AudioManager am = (AudioManager) getSystemService(AUDIO_SERVICE);
+        assert am != null;
         am.playSoundEffect(AudioManager.FX_KEY_CLICK);
+    }
+
+    private void setPreview(final String buffer){
+        this.buffer=buffer;
+        Handler mainHandler = new Handler(this.getMainLooper());
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                preview.setText(buffer);
+            }
+        };
+        mainHandler.post(myRunnable);
     }
 
     @Override

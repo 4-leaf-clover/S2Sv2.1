@@ -14,8 +14,10 @@
   limitations under the License.
 -->
 <resources>
-    <string name="app_name">S2Sv3</string>
-    <string name="permission_message">This app needs to record audio and recognize your speech.</string>
-    <string name="listening">Listening…</string>
-    <string name="load_file">Load file</string>
+    <string name="app_name" translatable="false">S2Sv3</string>
+    <string name="LeftKey">Left</string>
+    <string name="RightKey">Right</string>
+    <string name="ConfirmKey">Confirm</string>
+    <string name="RejectKey">Reject</string>
+    <string name="RecordKey">        Record        </string>
 </resources>

@@ -120,8 +120,14 @@ public class SampleKeyboard extends InputMethodService implements KeyboardView.O
                         id=new Integer(rn.nextInt(100)).toString();
 
 
-                        mTTS.speak(text,TextToSpeech.QUEUE_ADD,null,id);
+                        mTTS.speak(text,TextToSpeech.QUEUE_FLUSH,null,id);
                         mTTS.speak(CONFIRM,TextToSpeech.QUEUE_ADD,null,id);
+                        Log.d(Tags[2],"Speaking "+text+" with utterance id: "+id);
+
+                        while(mTTS.isSpeaking())
+                        {
+
+                        }
 
                         Log.d(Tags[1], "Keyboard class speech service listener VoiceRecorder dismiss");
                         mVoiceRecorder.dismiss();

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.fourleafclover.stos.MainActivity"
+    tools:context="com.fourleafclover.speech_to_speech.MainActivity"
     android:orientation="vertical">
 
 

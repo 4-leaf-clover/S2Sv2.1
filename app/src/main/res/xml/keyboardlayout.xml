@@ -13,7 +13,8 @@
             android:codes="100003"
             android:keyLabel="@string/RightKey"
             android:keyWidth="48%p"
-            android:keyEdgeFlags="right" />
+            android:keyEdgeFlags="right"
+            android:keyBackground="@color/primary"/>
     </Row>
 
     <Row>

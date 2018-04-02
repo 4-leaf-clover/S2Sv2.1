@@ -30,7 +30,7 @@ public class SampleKeyboard extends InputMethodService implements KeyboardView.O
 
 
     private KeyboardView kv;
-    private Keyboard keyboard;
+    private Keyboard keyboardLayout;
 
     /*
     * Log Tags
@@ -117,24 +117,23 @@ public class SampleKeyboard extends InputMethodService implements KeyboardView.O
                 @Override
                 public void onSpeechRecognized(final String text, final boolean isFinal) {
                     Log.d(Tags[1], "Keyboard class speech service listener isFinal value: " + isFinal);
-                    if (!TextUtils.isEmpty(text) && isFinal) {
+                    if (!TextUtils.isEmpty(text)) {
+                        if(isFinal){
+                            Log.d(Tags[1],"Preview has been updated");
+                            /*
+                            *Generate random Utterance ID
+                            */
+                            String id;
+                            Random rn=new Random();
+                            id= Integer.valueOf(rn.nextInt(100)).toString();
 
-                        Log.d(Tags[1],"Preview has been updated");
-                        /*
-                        *Generate random Utterance ID
-                        */
-                        String id;
-                        Random rn=new Random();
-                        id= Integer.valueOf(rn.nextInt(100)).toString();
-
-                        Log.d(Tags[1], "Keyboard class speech service listener VoiceRecorder dismiss");
-                        mVoiceRecorder.dismiss();
-                        SampleKeyboard.this.stopVoiceRecorder();
-
-                        mTTS.speak(text,TextToSpeech.QUEUE_ADD,null,id);
-
-                        Log.d(Tags[0],"Buffer: "+text);
+                            Log.d(Tags[1], "Keyboard class speech service listener VoiceRecorder dismiss");
+                            mVoiceRecorder.dismiss();
+                            mTTS.speak(text,TextToSpeech.QUEUE_FLUSH,null,id);
+                            SampleKeyboard.this.stopVoiceRecorder();
+                        }
                         setPreview(text);
+
                     }
                 }
             };
@@ -174,10 +173,10 @@ public class SampleKeyboard extends InputMethodService implements KeyboardView.O
 
         ic = getCurrentInputConnection();
 
-        keyboard = new Keyboard(this, R.xml.keyboardlayout);
+        keyboardLayout = new Keyboard(this, R.xml.keyboardlayout);
 
         kv = (KeyboardView) root.findViewById(R.id.keyboard);
-        kv.setKeyboard(keyboard);
+        kv.setKeyboard(keyboardLayout);
         kv.setOnKeyboardActionListener(this);
 
         Log.d(Tags[0], "Keyboard successfully created");
@@ -192,8 +191,8 @@ public class SampleKeyboard extends InputMethodService implements KeyboardView.O
                 if(i!=TextToSpeech.ERROR)
                 {
                     mTTS.setLanguage(Locale.ENGLISH);
-                    mTTS.setPitch(1.0f);
-                    mTTS.setSpeechRate(0.5f);
+                    mTTS.setPitch(0.7f);
+                    mTTS.setSpeechRate(0.7f);
                 }
             }
         });
@@ -232,13 +231,15 @@ public class SampleKeyboard extends InputMethodService implements KeyboardView.O
             case KEYBOARD_CONFIRM:
                 Toast.makeText(this, "Confirm Text", Toast.LENGTH_SHORT).show();
                 if(!TextUtils.isEmpty(buffer)) {
+                    mTTS.stop();
                     Log.d(Tags[0],"Text has been confirmed and committed");
-                    ic.commitText(buffer, 1);
+                    getCurrentInputConnection().commitText(buffer, 1);
                     preview.setText("");
                 }
                 break;
             case KEYBOARD_REJECT:
                 Toast.makeText(this, "Reject Text", Toast.LENGTH_SHORT).show();
+                mTTS.stop();
                 //TODO Reject button logic is incomplete
                 setPreview("");
                 break;
@@ -255,6 +256,7 @@ public class SampleKeyboard extends InputMethodService implements KeyboardView.O
 
     private void setPreview(final String buffer){
         this.buffer=buffer;
+        Log.d(Tags[0],"Buffer: "+buffer);
         Handler mainHandler = new Handler(this.getMainLooper());
         Runnable myRunnable = new Runnable() {
             @Override

@@ -135,7 +135,11 @@ public class Keyboard extends InputMethodService implements KeyboardView.OnKeybo
         }
 
         @Override
-        public void onVoice(byte[] data, int size) {}
+        public void onVoice(byte[] data, int size) {
+            if(mSpeechService != null){
+                mSpeechService.recognize(data,size);
+            }
+        }
 
         /**
          *  Called when user stops speaking

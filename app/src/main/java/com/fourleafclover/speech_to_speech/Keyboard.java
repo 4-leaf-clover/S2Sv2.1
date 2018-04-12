@@ -139,6 +139,7 @@ public class Keyboard extends InputMethodService implements KeyboardView.OnKeybo
             if(mSpeechService != null){
                 mSpeechService.recognize(data,size);
             }
+
         }
 
         /**

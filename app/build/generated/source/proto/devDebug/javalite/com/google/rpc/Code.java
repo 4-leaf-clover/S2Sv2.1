@@ -113,7 +113,7 @@ public enum Code
   PERMISSION_DENIED(7),
   /**
    * <pre>
-   * The request does not have valid authentication credentials for the
+   * The request does not have valid authentication credential for the
    * operation.
    * HTTP Mapping: 401 Unauthorized
    * </pre>
@@ -333,7 +333,7 @@ public enum Code
   public static final int PERMISSION_DENIED_VALUE = 7;
   /**
    * <pre>
-   * The request does not have valid authentication credentials for the
+   * The request does not have valid authentication credential for the
    * operation.
    * HTTP Mapping: 401 Unauthorized
    * </pre>
